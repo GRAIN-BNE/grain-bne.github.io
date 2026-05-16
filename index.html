@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRAIN Lab | Catawba College</title>
+  <meta name="description"
+    content="GRAIN studies granular convection, the Brazil nut effect, and segregation in vibrated particulate systems at Catawba College, Salisbury NC." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg:        #0c1117;
+      --surface:   #131b25;
+      --card:      #1a2535;
+      --border:    rgba(255,255,255,0.07);
+      --gold:      #c9993a;
+      --gold-dim:  rgba(201,153,58,0.12);
+      --gold-glow: rgba(201,153,58,0.25);
+      --text:      #dde4ee;
+      --muted:     #7b8fa8;
+      --accent:    #4a9eca;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { font-family: 'Lato', sans-serif; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    /* ── Typography ── */
+    .display { font-family: 'Playfair Display', Georgia, serif; }
+    .mono    { font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Gold accent ── */
+    .gold { color: var(--gold); }
+    .gold-bg { background: var(--gold); }
+
+    /* ── Gradient heading ── */
+    .gradient-text {
+      background: linear-gradient(135deg, #e0b95a 0%, #4a9eca 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Noise overlay for hero ── */
+    .hero-bg {
+      position: relative;
+      background:
+        radial-gradient(ellipse 70% 55% at 15% 40%, rgba(74,158,202,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 20%, rgba(201,153,58,0.07) 0%, transparent 50%),
+        var(--bg);
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(201,153,58,0.25);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,153,58,0.1);
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(12,17,23,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      font-size: 0.83rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--gold-dim);
+      border: 1px solid var(--gold);
+      color: var(--gold) !important;
+      padding: .35rem .9rem;
+      border-radius: 6px;
+      transition: background .2s !important;
+    }
+    .nav-cta:hover { background: var(--gold-glow) !important; }
+
+    #mobile-menu-btn { display: none; cursor: pointer; background: none; border: none; color: var(--text); }
+
+    /* ── Hero stats ── */
+    .hero-stat {
+      border-top: 1px solid var(--border);
+      padding-top: 1.25rem;
+    }
+    .hero-stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .25rem;
+    }
+    .hero-stat-val {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    /* ── Section wrappers ── */
+    .section { padding: 6rem 1.5rem; }
+    .section-alt { background: var(--surface); }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 0;
+    }
+
+    /* ── Research cards ── */
+    .research-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--gold-dim);
+      color: var(--gold);
+      border: 1px solid rgba(201,153,58,0.3);
+      padding: .2rem .6rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Numbered steps ── */
+    .step-num {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      background: var(--gold-dim);
+      border: 1px solid rgba(201,153,58,0.4);
+      color: var(--gold);
+      font-weight: 700; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Team ── */
+    .team-card { padding: 1.75rem; }
+    .team-role {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .5rem;
+    }
+    .team-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(74,158,202,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(74,158,202,0.2);
+      padding: .15rem .5rem;
+      border-radius: 3px;
+      margin-bottom: .75rem;
+    }
+
+    /* ── Publication entry ── */
+    .pub-entry {
+      padding: 1.25rem 1.5rem;
+      border-left: 3px solid var(--gold);
+      background: var(--card);
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1rem;
+    }
+    .pub-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--gold);
+      margin-bottom: .35rem;
+    }
+    .pub-title { font-weight: 700; margin-bottom: .25rem; }
+    .pub-meta { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── Equipment table ── */
+    .equip-row {
+      display: flex; gap: 1rem; align-items: baseline;
+      padding: .7rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    .equip-row:last-child { border-bottom: none; }
+    .equip-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      min-width: 120px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── CTA bar ── */
+    .cta-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem 3rem;
+    }
+
+    /* ── Button ── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--gold);
+      color: #0c1117;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: .75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: opacity .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: .5rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: .75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .btn-secondary:hover { background: var(--gold-dim); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 3rem 1.5rem;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 2rem;
+    }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1.5rem; }
+    .footer-links { display: flex; gap: 1.25rem; }
+    .footer-links a { color: var(--muted); font-size: 0.82rem; text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-bottom {
+      font-size: 0.75rem; color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+    }
+    .icon-link { color: var(--muted); transition: color .2s; }
+    .icon-link:hover { color: var(--gold); }
+
+    /* ── Mobile nav ── */
+    #mobile-nav {
+      display: none;
+      flex-direction: column;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      gap: 1rem;
+    }
+    #mobile-nav a {
+      color: var(--text); text-decoration: none;
+      font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+
+    /* ── SVG diagram panel ── */
+    .diagram-panel {
+      background: #f4f7fa;
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      #mobile-menu-btn { display: block; }
+      .section { padding: 4rem 1.25rem; }
+      .cta-bar { padding: 2rem 1.5rem; }
+    }
+
+    /* ── Fade in on load ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp .6s ease both; }
+    .delay-1 { animation-delay: .12s; }
+    .delay-2 { animation-delay: .24s; }
+    .delay-3 { animation-delay: .36s; }
+    .delay-4 { animation-delay: .48s; }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo">GRAIN</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#mechanism">Mechanism</a>
+      <a href="#equipment">Equipment</a>
+      <a href="#team">Team</a>
+      <a href="#publications">Publications</a>
+      <a href="mailto:bshresth@catawba.edu" class="nav-cta">Contact</a>
+    </div>
+    <button id="mobile-menu-btn" aria-label="Toggle menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div id="mobile-nav">
+    <a href="#about">About</a>
+    <a href="#research">Research</a>
+    <a href="#mechanism">Mechanism</a>
+    <a href="#equipment">Equipment</a>
+    <a href="#team">Team</a>
+    <a href="#publications">Publications</a>
+    <a href="mailto:bshresth@catawba.edu">Contact</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══════════════════════════════════════ -->
+<main id="top">
+<section class="hero-bg" style="min-height:100vh; display:flex; align-items:center; padding-top:60px;">
+  <div class="container" style="padding: 5rem 1.5rem;">
+    <div style="max-width:780px;">
+      <p class="section-label fade-up" style="color:var(--gold);">Catawba College · Salisbury, NC</p>
+      <h1 class="display fade-up delay-1" style="font-size:clamp(2.6rem,6vw,4.5rem); line-height:1.08; margin:0 0 1.25rem; color:var(--text);">
+        Granular Research on<br/>
+        <span class="gradient-text">Agitated Interacting graiNs</span>
+      </h1>
+      <p class="fade-up delay-2" style="font-size:1.1rem; color:var(--muted); max-width:600px; margin-bottom:2.25rem;">
+        GRAIN is an experimental physics research lab investigating how vibration drives 
+        collective behavior in granular matter — from local grain collisions to global 
+        convection rolls and size-driven segregation.
+      </p>
+      <div class="fade-up delay-3" style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:3.5rem;">
+        <a href="#research" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          View Research
+        </a>
+        <a href="#publications" class="btn-secondary">Publications</a>
+      </div>
+
+      <div class="fade-up delay-4" style="display:grid; grid-template-columns:repeat(3,1fr); max-width:480px; gap:1.5rem;">
+        <div class="hero-stat">
+          <p class="hero-stat-label">Drive</p>
+          <p class="hero-stat-val">Vibration</p>
+        </div>
+        <div class="hero-stat">
+          <p class="hero-stat-label">Output</p>
+          <p class="hero-stat-val">Convection</p>
+        </div>
+        <div class="hero-stat">
+          <p class="hero-stat-label">Effect</p>
+          <p class="hero-stat-val">Segregation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ ABOUT ══════════════════════════════════════ -->
+<section id="about" class="section">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
+      <div>
+        <span class="section-label">What We Study</span>
+        <h2 class="display" style="font-size:clamp(1.8rem,3.5vw,2.6rem); line-height:1.2; margin:0 0 1.5rem;">
+          Sand can act like a solid, flow like a liquid, and still be neither one.
+        </h2>
+        <p style="color:var(--muted); margin-bottom:1rem;">
+          Granular materials — sand, seeds, glass beads, powders — are collections of 
+          macroscopic particles large enough that gravity, not thermal energy, governs 
+          their motion. Unlike atoms, grains do not move spontaneously; they require 
+          external forcing to rearrange.
+        </p>
+        <p style="color:var(--muted);">
+          That is why granular matter is so strange. It can support weight like a solid, 
+          pour like a liquid, dissipate energy in every collision, and suddenly jam 
+          mid-flow. Under vibration, local collisions can organize into global convection 
+          rolls that transport grains through the entire bed — a phenomenon with no 
+          analog in equilibrium thermodynamics and no unified theoretical description.
+        </p>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="card" style="padding:1.5rem;">
+          <div style="margin-bottom:1rem; color:var(--gold);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3 style="font-weight:700; margin:0 0 .5rem;">No Equilibrium</h3>
+          <p style="font-size:0.84rem; color:var(--muted); margin:0;">Every collision dissipates energy, so the system must be continually driven to sustain motion.</p>
+        </div>
+        <div class="card" style="padding:1.5rem;">
+          <div style="margin-bottom:1rem; color:var(--gold);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </div>
+          <h3 style="font-weight:700; margin:0 0 .5rem;">Force Chains</h3>
+          <p style="font-size:0.84rem; color:var(--muted); margin:0;">Stress travels through filamentary contact networks, not uniformly like a fluid.</p>
+        </div>
+        <div class="card" style="padding:1.5rem;">
+          <div style="margin-bottom:1rem; color:var(--gold);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+          </div>
+          <h3 style="font-weight:700; margin:0 0 .5rem;">Brazil Nut Effect</h3>
+          <p style="font-size:0.84rem; color:var(--muted); margin:0;">Large particles rise to the surface of a shaken mixture through convection and void-filling dynamics.</p>
+        </div>
+        <div class="card" style="padding:1.5rem;">
+          <div style="margin-bottom:1rem; color:var(--gold);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="M12 7v5l3 3"/></svg>
+          </div>
+          <h3 style="font-weight:700; margin:0 0 .5rem;">Convection Rolls</h3>
+          <p style="font-size:0.84rem; color:var(--muted); margin:0;">Wall friction and vibration generate counter-rotating circulation rolls across the entire grain bed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ RESEARCH PROGRAM ══════════════════════════ -->
+<section id="research" class="section section-alt">
+  <div class="container">
+    <div style="text-align:center; max-width:640px; margin:0 auto 3.5rem;">
+      <span class="section-label">Research Program</span>
+      <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.4rem); margin:0 0 1rem;">
+        Research Program at Catawba College
+      </h2>
+      <p style="color:var(--muted);">
+        GRAIN uses controlled vibration experiments and quantitative imaging to ask how 
+        particle properties, forcing parameters, boundary conditions, and ambient 
+        environment shape the onset and dynamics of granular convection.
+      </p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;">
+      <div class="card" style="padding:1.75rem;">
+        <span class="research-tag">Project I</span>
+        <h3 style="font-size:1.15rem; font-weight:700; margin:0 0 .75rem;">Segregation Onset</h3>
+        <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.1rem;">
+          Determine how grain-property ratios and fill depth control when segregation 
+          begins and how rapidly it progresses.
+        </p>
+        <ul style="list-style:none; padding:0; margin:0; color:var(--text); font-size:0.84rem; display:flex; flex-direction:column; gap:.45rem;">
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Size, shape, and density ratios</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Fill-depth dependence</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Segregation timescales</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Reverse Brazil Nut Effect conditions</li>
+        </ul>
+      </div>
+
+      <div class="card" style="padding:1.75rem;">
+        <span class="research-tag">Project II</span>
+        <h3 style="font-size:1.15rem; font-weight:700; margin:0 0 .75rem;">Driving Direction</h3>
+        <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.1rem;">
+          Compare vertical, horizontal, and angled forcing to characterize how vibration 
+          axis changes the convection pattern and segregation efficiency.
+        </p>
+        <ul style="list-style:none; padding:0; margin:0; color:var(--text); font-size:0.84rem; display:flex; flex-direction:column; gap:.45rem;">
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Vertical excitation</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Horizontal excitation</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Angled and compound forcing</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Dimensionless Γ parameter space</li>
+        </ul>
+      </div>
+
+      <div class="card" style="padding:1.75rem;">
+        <span class="research-tag">Project III</span>
+        <h3 style="font-size:1.15rem; font-weight:700; margin:0 0 .75rem;">Environment &amp; Boundaries</h3>
+        <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.1rem;">
+          Measure how humidity, cohesion, container geometry, and wall friction influence 
+          the onset and structure of convection rolls.
+        </p>
+        <ul style="list-style:none; padding:0; margin:0; color:var(--text); font-size:0.84rem; display:flex; flex-direction:column; gap:.45rem;">
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Humidity and cohesion effects</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Container geometry</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Wall-friction dependence</li>
+          <li style="display:flex; gap:.5rem; align-items:baseline;"><span style="color:var(--gold);">›</span> Pressure and confinement effects</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ MECHANISM ══════════════════════════════════ -->
+<section id="mechanism" class="section">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;">
+      <!-- SVG diagram -->
+      <div class="diagram-panel">
+        <svg viewBox="0 0 760 560" role="img"
+             aria-label="Before and after illustration of the Brazil nut effect"
+             style="width:100%; height:auto; display:block;">
+          <rect x="12" y="12" width="308" height="480" fill="#f4f7fa" stroke="#c9d6e3" stroke-width="2"/>
+          <rect x="440" y="12" width="308" height="480" fill="#f4f7fa" stroke="#c9d6e3" stroke-width="2"/>
+          <text x="166" y="44" text-anchor="middle" fill="#64748b" font-size="22" font-weight="700" letter-spacing="6" font-family="JetBrains Mono, monospace">BEFORE</text>
+          <text x="594" y="44" text-anchor="middle" fill="#64748b" font-size="22" font-weight="700" letter-spacing="6" font-family="JetBrains Mono, monospace">AFTER</text>
+          <rect x="26" y="60" width="280" height="416" fill="#e8f4fb" stroke="#3a7ca5" stroke-width="3" rx="2"/>
+          <rect x="454" y="60" width="280" height="416" fill="#e8f4fb" stroke="#3a7ca5" stroke-width="3" rx="2"/>
+          <!-- Before: large grains at bottom -->
+          <g fill="#e8a835" stroke="#c9872a" stroke-width="1.5">
+            <circle cx="60"  cy="270" r="13"/><circle cx="96"  cy="298" r="13"/>
+            <circle cx="130" cy="248" r="13"/><circle cx="165" cy="282" r="13"/>
+            <circle cx="200" cy="252" r="13"/><circle cx="232" cy="304" r="13"/>
+            <circle cx="268" cy="286" r="13"/><circle cx="75"  cy="325" r="13"/>
+            <circle cx="130" cy="328" r="13"/><circle cx="178" cy="322" r="13"/>
+            <circle cx="220" cy="340" r="13"/><circle cx="256" cy="334" r="13"/>
+            <circle cx="62"  cy="370" r="13"/><circle cx="104" cy="370" r="13"/>
+            <circle cx="148" cy="365" r="13"/><circle cx="192" cy="364" r="13"/>
+            <circle cx="236" cy="364" r="13"/><circle cx="278" cy="360" r="13"/>
+          </g>
+          <g fill="#5a9dc4" stroke="#3a7ca5" stroke-width="3">
+            <circle cx="57"  cy="415" r="26"/><circle cx="114" cy="428" r="26"/>
+            <circle cx="168" cy="418" r="26"/><circle cx="224" cy="432" r="26"/>
+            <circle cx="278" cy="421" r="26"/>
+          </g>
+          <!-- Arrow -->
+          <text x="380" y="242" text-anchor="middle" fill="#b07030" font-size="20" font-weight="700" font-family="Lato, sans-serif">SHAKE</text>
+          <line x1="340" y1="250" x2="420" y2="250" stroke="#b07030" stroke-width="2.5"/>
+          <text x="380" y="278" text-anchor="middle" fill="#b07030" font-size="26">↕</text>
+          <!-- After: large grains at top -->
+          <g fill="#5a9dc4" stroke="#3a7ca5" stroke-width="3">
+            <circle cx="490" cy="108" r="26"/><circle cx="548" cy="96" r="26"/>
+            <circle cx="602" cy="108" r="26"/><circle cx="656" cy="104" r="26"/>
+            <circle cx="710" cy="100" r="26"/>
+          </g>
+          <g fill="#e8a835" stroke="#c9872a" stroke-width="1.5">
+            <circle cx="520" cy="155" r="13"/><circle cx="574" cy="155" r="13"/>
+            <circle cx="628" cy="155" r="13"/><circle cx="684" cy="155" r="13"/>
+            <circle cx="484" cy="185" r="13"/><circle cx="544" cy="185" r="13"/>
+            <circle cx="600" cy="185" r="13"/><circle cx="656" cy="185" r="13"/>
+            <circle cx="504" cy="215" r="13"/><circle cx="560" cy="215" r="13"/>
+            <circle cx="616" cy="215" r="13"/><circle cx="672" cy="215" r="13"/>
+            <circle cx="476" cy="245" r="13"/><circle cx="532" cy="245" r="13"/>
+            <circle cx="588" cy="245" r="13"/><circle cx="644" cy="245" r="13"/>
+            <circle cx="700" cy="252" r="13"/>
+          </g>
+          <!-- Legend -->
+          <circle cx="40"  cy="524" r="12" fill="#e8a835" stroke="#c9872a" stroke-width="1.5"/>
+          <text x="62" y="530" fill="#64748b" font-size="20" font-family="Lato, sans-serif">Small grains</text>
+          <circle cx="274" cy="524" r="18" fill="#5a9dc4" stroke="#3a7ca5" stroke-width="3"/>
+          <text x="302" y="530" fill="#64748b" font-size="20" font-family="Lato, sans-serif">Large grains</text>
+          <text x="600" y="520" text-anchor="middle" fill="#3a7ca5" font-size="19" font-weight="700" font-family="Lato, sans-serif">↑ Large particles rose!</text>
+        </svg>
+      </div>
+
+      <div>
+        <span class="section-label">The Mechanism</span>
+        <h2 class="display" style="font-size:clamp(1.6rem,3vw,2.3rem); line-height:1.2; margin:0 0 1.5rem;">
+          How vibration turns local grain motion into global circulation.
+        </h2>
+        <div style="display:flex; flex-direction:column; gap:.85rem;">
+          <div class="card" style="padding:1.1rem 1.25rem;">
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div class="step-num">1</div>
+              <div>
+                <h3 style="font-weight:700; margin:0 0 .3rem; font-size:0.95rem;">Fluidization</h3>
+                <p style="font-size:0.84rem; color:var(--muted); margin:0;">When vibration amplitude is sufficient (Γ&nbsp;=&nbsp;A(2πf)²/g &gt; 1), grains briefly lose contact and the bed momentarily fluidizes.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="padding:1.1rem 1.25rem;">
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div class="step-num">2</div>
+              <div>
+                <h3 style="font-weight:700; margin:0 0 .3rem; font-size:0.95rem;">Wall Downflow</h3>
+                <p style="font-size:0.84rem; color:var(--muted); margin:0;">Friction at container walls drags grains downward along the boundaries during the compression phase.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="padding:1.1rem 1.25rem;">
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div class="step-num">3</div>
+              <div>
+                <h3 style="font-weight:700; margin:0 0 .3rem; font-size:0.95rem;">Center Upflow</h3>
+                <p style="font-size:0.84rem; color:var(--muted); margin:0;">Mass conservation forces grains upward through the center, forming two counter-rotating convection rolls.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="padding:1.1rem 1.25rem;">
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div class="step-num">4</div>
+              <div>
+                <h3 style="font-weight:700; margin:0 0 .3rem; font-size:0.95rem;">Surface Trapping</h3>
+                <p style="font-size:0.84rem; color:var(--muted); margin:0;">Large particles reaching the surface cannot easily sink back — smaller grains fill the void beneath them before they descend.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ EQUIPMENT ══════════════════════════════════ -->
+<section id="equipment" class="section section-alt">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
+      <div>
+        <span class="section-label">Lab Infrastructure</span>
+        <h2 class="display" style="font-size:clamp(1.6rem,3vw,2.2rem); line-height:1.2; margin:0 0 1rem;">
+          Instrumentation &amp; Equipment
+        </h2>
+        <p style="color:var(--muted); margin-bottom:2rem; font-size:0.93rem;">
+          The GRAIN lab uses a controlled electromagnetic shaker system combined with 
+          high-speed imaging and precision accelerometry to make fully quantitative 
+          measurements of granular dynamics.
+        </p>
+        <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem;">
+          <div class="equip-row">
+            <span class="equip-label">Shaker</span>
+            <span style="font-size:0.88rem;">The Modal Shop 2025E electromagnetic shaker + 2100E23-400 power amplifier</span>
+          </div>
+          <div class="equip-row">
+            <span class="equip-label">Signal Gen.</span>
+            <span style="font-size:0.88rem;">Siglent SDG1032X dual-channel function generator</span>
+          </div>
+          <div class="equip-row">
+            <span class="equip-label">Camera</span>
+            <span style="font-size:0.88rem;">Basler ace acA640-750um (750 fps) for particle tracking</span>
+          </div>
+          <div class="equip-row">
+            <span class="equip-label">Accelerometer</span>
+            <span style="font-size:0.88rem;">PCB Piezotronics 352A10 ICP® (10 mV/g, 0.5–10 kHz)</span>
+          </div>
+          <div class="equip-row">
+            <span class="equip-label">Conditioner</span>
+            <span style="font-size:0.88rem;">PCB 482A22 ICP® signal conditioner</span>
+          </div>
+          <div class="equip-row">
+            <span class="equip-label">Oscilloscope</span>
+            <span style="font-size:0.88rem;">Rigol DS1102D digital storage oscilloscope</span>
+          </div>
+          <div class="equip-row">
+            <span class="equip-label">DAQ / Control</span>
+            <span style="font-size:0.88rem;">Arduino + ADXL345; Python-based acquisition pipeline</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="section-label">Methods</span>
+        <h2 class="display" style="font-size:clamp(1.6rem,3vw,2.2rem); line-height:1.2; margin:0 0 1rem;">
+          Measurement Approach
+        </h2>
+        <p style="color:var(--muted); margin-bottom:1.5rem; font-size:0.93rem;">
+          Quantitative measurements require careful calibration of driving parameters 
+          and optical imaging systems. We use Particle Tracking Velocimetry (PTV) 
+          and image processing to extract grain-level kinematics from high-speed video.
+        </p>
+        <div style="display:flex; flex-direction:column; gap:.75rem;">
+          <div class="card" style="padding:1rem 1.25rem;">
+            <h3 style="font-weight:700; font-size:0.92rem; margin:0 0 .35rem;">Particle Tracking Velocimetry</h3>
+            <p style="font-size:0.82rem; color:var(--muted); margin:0;">Frame-by-frame tracking of individual grain positions to reconstruct velocity fields and identify convection roll structure.</p>
+          </div>
+          <div class="card" style="padding:1rem 1.25rem;">
+            <h3 style="font-weight:700; font-size:0.92rem; margin:0 0 .35rem;">Vibration Characterization</h3>
+            <p style="font-size:0.82rem; color:var(--muted); margin:0;">Accelerometer-based measurement of the dimensionless peak acceleration Γ and frequency f to ensure reproducible driving conditions.</p>
+          </div>
+          <div class="card" style="padding:1rem 1.25rem;">
+            <h3 style="font-weight:700; font-size:0.92rem; margin:0 0 .35rem;">Image Processing Pipeline</h3>
+            <p style="font-size:0.82rem; color:var(--muted); margin:0;">Automated segmentation and grain-size classification from high-speed frames; statistical analysis of segregation state over time.</p>
+          </div>
+          <div class="card" style="padding:1rem 1.25rem;">
+            <h3 style="font-weight:700; font-size:0.92rem; margin:0 0 .35rem;">Parameter Space Surveys</h3>
+            <p style="font-size:0.82rem; color:var(--muted); margin:0;">Systematic sweeps of frequency, amplitude, size ratio, and fill depth to map phase boundaries of the convection-onset transition.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ TEAM ════════════════════════════════════════ -->
+<section id="team" class="section">
+  <div class="container">
+    <div style="text-align:center; max-width:560px; margin:0 auto 3.5rem;">
+      <span class="section-label">The Team</span>
+      <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.4rem); margin:0 0 1rem;">One grain at a time.</h2>
+      <p style="color:var(--muted);">An undergraduate-centered experimental physics lab at Catawba College, Department of Chemistry and Biochemistry.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem;">
+      <!-- PI -->
+      <div class="card team-card" style="grid-column:span 1;">
+        <div class="team-badge">PI</div>
+        <p class="team-role">Lab Director</p>
+        <h3 style="font-weight:700; font-size:1.05rem; margin:0 0 .5rem;">
+          <a href="https://bshrestha-1.github.io/" style="color:var(--text); text-decoration:none; border-bottom:1px solid var(--gold);">Bijay Shrestha</a>
+        </h3>
+        <p style="font-size:0.82rem; color:var(--muted); margin:0 0 .75rem;">Visiting Assistant Professor of Physics</p>
+        <p style="font-size:0.8rem; color:var(--muted); margin:0;">PhD, Experimental HEP (Univ. of Oklahoma). Postdoctoral researcher, ATLAS Collaboration, CERN. Leads experimental program, research design, and student mentoring.</p>
+      </div>
+
+      <!-- Nikita -->
+      <div class="card team-card">
+        <div class="team-badge">Undergraduate</div>
+        <p class="team-role">Vibration Control &amp; Data Acquisition</p>
+        <h3 style="font-weight:700; font-size:1.05rem; margin:0 0 .5rem;">Nikita Poliakov</h3>
+        <p style="font-size:0.8rem; color:var(--muted); margin:0;">Works on shaker control systems, accelerometer-based vibration characterization, and experimental data acquisition pipelines.</p>
+      </div>
+
+      <!-- Christopher -->
+      <div class="card team-card">
+        <div class="team-badge">Undergraduate</div>
+        <p class="team-role">Image Processing &amp; Data Analysis</p>
+        <h3 style="font-weight:700; font-size:1.05rem; margin:0 0 .5rem;">Christopher Brown</h3>
+        <p style="font-size:0.8rem; color:var(--muted); margin:0;">Builds image segmentation pipelines to classify grain size from high-speed video and quantify segregation state over time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ PUBLICATIONS ═══════════════════════════════ -->
+<section id="publications" class="section section-alt">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 2fr; gap:4rem; align-items:start;">
+      <div>
+        <span class="section-label">Publications</span>
+        <h2 class="display" style="font-size:clamp(1.6rem,3vw,2.2rem); line-height:1.2; margin:0 0 1rem;">
+          Research Outputs
+        </h2>
+        <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.5rem;">
+          GRAIN is a young lab. Conference presentations and peer-reviewed 
+          articles on granular convection, segregation, and vibrated 
+          particulate systems will be listed here as the project develops.
+        </p>
+        <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1rem 1.25rem; font-size:0.82rem; color:var(--muted);">
+          <p style="margin:0 0 .35rem; font-weight:700; color:var(--text);">Contribute or Collaborate</p>
+          <p style="margin:0;">Interested in joint publications or data sharing? Reach out to discuss.</p>
+        </div>
+      </div>
+
+      <div>
+        <!-- Placeholder entries styled as real publication records -->
+        <div class="pub-entry">
+          <p class="pub-year">In Preparation · 2025</p>
+          <p class="pub-title">Characterization of Granular Convection Onset in a Vertically Vibrated Bed</p>
+          <p class="pub-meta">B. Shrestha, N. Poliakov, C. Brown · <em>GRAIN Lab, Catawba College</em></p>
+        </div>
+
+        <div class="pub-entry">
+          <p class="pub-year">Conference · American Physical Society, 2025</p>
+          <p class="pub-title">"Shaken Not Stirred: Self-Organization of Vibrated Granular Materials"</p>
+          <p class="pub-meta">B. Shrestha · Invited Departmental Talk, Catawba College Faculty Research Day</p>
+        </div>
+
+        <div style="background:var(--card); border:1px dashed rgba(201,153,58,0.25); border-radius:8px; padding:1.25rem 1.5rem; margin-top:.5rem;">
+          <p style="font-size:0.82rem; color:var(--muted); margin:0; font-style:italic;">
+            Future papers, conference proceedings, and undergraduate research presentations 
+            will appear here as the experimental program matures.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ CONTACT CTA ═════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="cta-bar">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:2rem;">
+        <div style="max-width:560px;">
+          <h2 class="display" style="font-size:clamp(1.4rem,2.5vw,2rem); margin:0 0 .75rem;">
+            Interested in granular matter, nonlinear dynamics, or undergraduate research?
+          </h2>
+          <p style="color:var(--muted); margin:0; font-size:0.93rem;">
+            GRAIN welcomes collaborations, prospective student researchers, and 
+            conversations about new experiments. Catawba College undergraduates 
+            interested in experimental physics are especially encouraged to reach out.
+          </p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:.75rem; align-items:flex-start;">
+          <a href="mailto:bshresth@catawba.edu" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email the Lab
+          </a>
+          <a href="https://bshrestha-1.github.io/" class="btn-secondary" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            PI Website
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ FOOTER ══════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <p class="display" style="font-size:1.25rem; color:var(--gold); margin:0 0 .35rem;">GRAIN</p>
+        <p style="font-size:0.8rem; color:var(--muted); margin:0 0 .2rem;">Granular Research on Agitated Interacting graiNs</p>
+        <p style="font-size:0.8rem; color:var(--muted); margin:0;">Department of Chemistry and Biochemistry · Catawba College · Salisbury, NC</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 GRAIN Lab · Catawba College. All rights reserved.</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--muted);">Granular Physics · Catawba College</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  const btn = document.getElementById('mobile-menu-btn');
+  const nav = document.getElementById('mobile-nav');
+  let open = false;
+  btn.addEventListener('click', () => {
+    open = !open;
+    nav.style.display = open ? 'flex' : 'none';
+  });
+  nav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => { open = false; nav.style.display = 'none'; });
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
